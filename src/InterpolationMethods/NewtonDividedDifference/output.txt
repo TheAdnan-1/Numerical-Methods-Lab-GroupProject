@@ -1,0 +1,1 @@
+Interpolated value at x = 2.5 is -0.375

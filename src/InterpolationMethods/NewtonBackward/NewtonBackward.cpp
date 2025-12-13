@@ -22,16 +22,16 @@ int main() {
     for (i = 0; i <= degree; i++) fin >> coeff[i];
     fin >> n;
     arr x(n), y(n);
-    for ( i = 0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         fin >> x[i];
         y[i] = fun(coeff, x[i]);
     }
     double value;
     fin >> value;
-    vector<arr> diff(n, vector<double>(n));
+    vector<arr> diff(n, arr(n));
     for ( i = 0; i < n; i++) diff[i][0] = y[i];
     for ( j = 1; j < n; j++) {
-        for (int i = n - 1; i >= j; i--) {
+        for (i = n - 1; i >= j; i--) {
             diff[i][j] = diff[i][j - 1] - diff[i - 1][j - 1];
         }
     }
@@ -45,8 +45,7 @@ int main() {
         fact *= i;
         result += (u_term * diff[n - 1][i]) / fact;
     }
-    fout << "Interpolated value at x = " << value
-         << " is " << result << endl;
+    fout << "Interpolated value at x = " << value<< " is " << result << endl;
     }
     fin.close();
     fout.close();
