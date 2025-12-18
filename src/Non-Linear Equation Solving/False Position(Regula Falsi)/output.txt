@@ -1,0 +1,38 @@
+Total Test Cases: 3
+
+Function: f(x) = 4x^4 -9x^3 +0x^2 +0x^1 +4
+Degree: 4
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 0.444444
+  Iter 2: x = 0.694444
+  Iter 3: x = 0.826087
+  Iter 4: x = 0.887097
+  Iter 5: x = 0.915254
+  ...
+  Final root ≈ 0.906250
+
+Function: f(x) = 1x^3 -6x^2 +11x^1 -6
+Degree: 3
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 1.000000
+  Iter 2: x = 2.000000
+  Iter 3: x = 3.000000
+  ...
+  Final root ≈ 0.999554
+
+Function: f(x) = 1x^2 +0x^1 -4
+Degree: 2
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 0.400000
+  Iter 2: x = 1.333333
+  Iter 3: x = 1.600000
+  Iter 4: x = 1.777778
+  Iter 5: x = 1.846154
+  ...
+  Final root ≈ 2.000186
