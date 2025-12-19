@@ -1,37 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-double f(double x)
-{
-    return x * x * x - x - 2;
+int degree;
+double coeff[20];
+
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
+    return result;
 }
 
-int main()
-{
-    double a, b, mid;
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double a,b,mid;
     int n;
-
-    cin >> a >> b; // input interval
-    cin >> n;      // number of iterations
-
-    if (f(a) * f(b) >= 0)
-    {
-        cout << "Invalid interval";
+    fin>>degree;
+    for(int i=0;i<=degree;i++) fin>>coeff[i];
+    fin>>a>>b>>n;
+    if(f(a)*f(b)>=0){
+        fout<<"Invalid interval\n";
         return 0;
     }
-
-    for (int i = 0; i < n; i++)
-    {
-        mid = (a + b) / 2;
-
-        if (f(mid) == 0)
-            break;
-        else if (f(a) * f(mid) < 0)
-            b = mid;
-        else
-            a = mid;
+    for(int i=0;i<n;i++){
+        mid=(a+b)/2;
+        if(f(mid)==0) break;
+        else if(f(a)*f(mid)<0) b=mid;
+        else a=mid;
     }
+    fout<<fixed<<setprecision(6)<<mid<<'\n';
 
-    cout << mid;
+    fin.close();
+    fout.close();
     return 0;
 }
