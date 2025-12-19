@@ -235,7 +235,6 @@ cat Secant/output.txt
 - This prevents instability caused by floating-point precision limits.  
 
 
-```
 **Code**
 
 ```bash
