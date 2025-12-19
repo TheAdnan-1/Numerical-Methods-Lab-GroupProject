@@ -1,0 +1,4 @@
+Linear Regression Line:
+y = a + b x
+a = 1.800
+b = 0.800
