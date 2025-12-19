@@ -20,15 +20,13 @@ int main() {
             A[row][col]=sum;
         }
         sum=0;
-        for(i=0;i<n;i++)
-            sum += y[i]*pow(x[i], row);
-        A[row][m+1] = sum;
+        for(i=0;i<n;i++) sum += y[i]*pow(x[i], row);
+        A[row][m+1]=sum;
     }
     for(i=0;i<m+1;i++){
         for(k=i+1;k<m+1;k++){
             double factor = A[k][i]/A[i][i];
-            for(j=i; j <= m+1; j++)
-                A[k][j] -= factor * A[i][j];
+            for(j=i; j <= m+1; j++) A[k][j] -= factor * A[i][j];
         }
     }
     arr a(m+1);
@@ -40,8 +38,12 @@ int main() {
     fout<<fixed<<setprecision(3);
     fout<<"Polynomial Regression (degree "<<m<<"):\n";
     for(i=0;i<=m;i++)fout<<'a'<<i<<" = "<<a[i]<<'\n';
+    fout<<"The Equation: "<<a[0]<<" + ";
+    for(i=1;i<n-1;i++) fout<<a[i]<<"x^"<<i<<" + ";
+    fout<<a[i]<<"x^"<<i<<" = 0";
     }
     fin.close();
     fout.close();
     return 0;
 }
+
