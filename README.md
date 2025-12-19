@@ -2020,7 +2020,7 @@ This project was developed as a requirement of the Numerical Methods Laboratory 
 
 ![](https://img.shields.io/badge/2-Md%20Sulaiman%20|%20Roll:%202207011-FFCC00?style=for-the-badge)
 
-![](https://img.shields.io/badge/3-Md%20Redoyanul%20Karim%20Rusho%20|%20Roll:%202207014-CD7F32?style=for-the-badge)
+![](https://img.shields.io/badge/3-Md%20Redoanul%20Karim%20Rusho%20|%20Roll:%202207014-CD7F32?style=for-the-badge)
 
 ---
 
