@@ -1,0 +1,38 @@
+RUNGE KUTTA 4th ORDER METHOD
+
+Function: f(x, y) = x*y + y
+
+Total Test Cases: 3
+
+----------------------------------
+TEST CASE #1
+
+Initial x0: 0.000, y0: 1.000
+Final x: 1.000
+Step size (h): 0.001
+Number of steps: 1000
+
+Result:
+y(1.000) = 4.482
+
+----------------------------------
+TEST CASE #2
+
+Initial x0: 0.000, y0: 2.000
+Final x: 2.000
+Step size (h): 0.001
+Number of steps: 2000
+
+Result:
+y(2.000) = 109.196
+
+----------------------------------
+TEST CASE #3
+
+Initial x0: 1.000, y0: 1.000
+Final x: 3.000
+Step size (h): 0.001
+Number of steps: 2000
+
+Result:
+y(3.000) = 403.429

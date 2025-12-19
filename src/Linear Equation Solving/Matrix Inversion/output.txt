@@ -1,0 +1,74 @@
+MATRIX INVERSION METHOD 
+
+-----------------------
+
+Test Case 1 (3x3)
+
+Coefficient Matrix A:
+     2.000      1.000     -1.000
+    -3.000     -1.000      2.000
+    -2.000      1.000      2.000
+
+Determinant det(A): 1.000
+
+Adjoint Matrix adj(A):
+     4.000      3.000     -1.000
+    -2.000     -2.000      1.000
+     5.000      4.000     -1.000
+
+Inverse Matrix A⁻¹:
+     4.000      3.000     -1.000
+    -2.000     -2.000      1.000
+     5.000      4.000     -1.000
+
+Unique Solution exists.
+
+Solution (x = A⁻¹ · b):
+x1 =  2.000
+x2 =  3.000
+x3 = -1.000
+
+--------------------------------------------------
+
+Test Case 2 (2x2)
+
+Coefficient Matrix A:
+     1.000      2.000
+     2.000      4.000
+
+Determinant det(A): 0.000
+
+Matrix is singular (det(A) = 0)
+→ Inverse does not exist
+→ System has NO unique solution
+
+--------------------------------------------------
+
+Test Case 3 (3x3)
+
+Coefficient Matrix A:
+     2.000      4.000      6.000
+     1.000      2.000      3.000
+     3.000      6.000      9.000
+
+Determinant det(A): 0.000
+
+Matrix is singular (det(A) = 0)
+→ Inverse does not exist
+→ System has INFINITE solutions
+
+--------------------------------------------------
+
+Test Case 4 (2x2)
+
+Coefficient Matrix A:
+     1.000      1.000
+     1.000      1.000
+
+Determinant det(A): 0.000
+
+Matrix is singular (det(A) = 0)
+→ Inverse does not exist
+→ System has NO solution
+
+--------------------------------------------------
