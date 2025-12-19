@@ -4,61 +4,40 @@ using namespace std;
 int degree;
 double coeff[20];
 
-// Polynomial function
-double f(double x)
-{
-    double result = 0;
-    for (int i = 0; i <= degree; i++)
-    {
-        result += coeff[i] * pow(x, degree - i);
-    }
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
     return result;
 }
 
-int main()
-{
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
     int t;
-    cin >> t;
-
-    while (t--)
-    {
-        double a, b, h, sum;
+    fin>>t;
+    while(t--){
+        double a,b,h,sum;
         int n;
-
-        // Input polynomial
-        cin >> degree;
-        for (int i = 0; i <= degree; i++)
-        {
-            cin >> coeff[i];
-        }
-
-        // Input limits and subintervals
-        cin >> a >> b;
-        cin >> n;
-
-        // Simpson's 3/8 rule requires n multiple of 3
-        if (n % 3 != 0)
-        {
-            cout << "Invalid n (must be multiple of 3)" << endl;
+        fin>>degree;
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        fin>>a>>b>>n;
+        if(n%3!=0){
+            fout<<"Invalid n (must be multiple of 3)\n";
             continue;
         }
-
-        h = (b - a) / n;
-        sum = f(a) + f(b);
-
-        for (int i = 1; i < n; i++)
-        {
-            double x = a + i * h;
-
-            if (i % 3 == 0)
-                sum += 2 * f(x);
-            else
-                sum += 3 * f(x);
+        h=(b-a)/n;
+        sum=f(a)+f(b);
+        for(int i=1;i<n;i++){
+            double x=a+i*h;
+            if(i%3==0) sum+=2*f(x);
+            else sum+=3*f(x);
         }
-
-        double result = (3 * h / 8) * sum;
-        cout << "Integral: " << result << endl;
+        double result=(3*h/8)*sum;
+        fout<<fixed<<setprecision(6);
+        fout<<"Integral: "<<result<<'\n';
     }
-
+    fin.close();
+    fout.close();
     return 0;
 }
