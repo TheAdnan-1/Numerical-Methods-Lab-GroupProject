@@ -213,11 +213,29 @@ cat Secant/output.txt
 ### Gauss Elimination Method
 
 **Theory**
+- Gaussian elimination is a method to solve systems of linear equations.  
+- It works by converting the augmented matrix [A|B] into an upper-triangular form using row operations.  
+- Partial pivoting improves stability: rows are swapped so the largest pivot in each column is placed on the diagonal. This avoids dividing by very small numbers and reduces numerical errors.  
+- If a pivot column becomes all zeros but the augmented part is non-zero, the system has no solution.  
+- If both are zero, the system may have infinitely many solutions.  
+- Once the matrix is triangular with non-zero diagonal entries, the system Ux = C is solved using back substitution, starting from the last row upward.  
 
-```bash
-cat "Gauss Elimination/Gauss Elimination.txt"
+
+**Algorithm Steps**
+
+1. Apply partial pivoting in each column to bring the largest pivot to the diagonal.  
+2. Perform forward elimination to form an upper-triangular matrix.  
+3. Check for consistency - zero pivots or zero rows indicate special cases.  
+4. If the system is consistent and has a unique solution, solve using back substitution.  
+
+
+**Notes**
+
+- A tolerance of `1e-10` is used to treat very small pivots or coefficients as zero.  
+- This prevents instability caused by floating-point precision limits.  
+
+
 ```
-
 **Code**
 
 ```bash
@@ -392,9 +410,31 @@ Infinite Solutions!
 
 **Theory**
 
-```bash
-cat "Gauss Jordan Elimination/Gauss Jordan Elimination.txt"
-```
+- Gauss-Jordan applies row operations to convert [A|B] directly to RREF, where each pivot is 1 and the pivot columns have zeros elsewhere. 
+
+- Partial pivoting improves numerical stability and avoids dividing by tiny pivots.
+
+- Rank comparison:  if rank(A) < rank([A|B]) → inconsistent; if rank(A) < n but rank(A) == rank([A|B]) → infinite solutions; if rank(A) = n → unique solution.
+
+### Algorithm steps
+
+1. **Partial pivoting**: swap the current row with the row having the largest absolute pivot in the column. 
+
+2. **Scale the pivot row** so the pivot becomes 1.
+
+3. **Eliminate the pivot column** in all other rows to reach RREF.
+
+4. **Check ranks** to classify:  inconsistent, infinite solutions, or unique solution (read directly from RREF).
+
+### What it does: 
+
+- Solves linear systems using Gauss-Jordan elimination with partial pivoting. 
+
+- Reduces the augmented matrix to Reduced Row Echelon Form (RREF).
+
+- Detects three outcomes per test case:  Unique Solution, No Solution (inconsistent), Infinite Solutions (dependent).
+
+- Handles multiple test cases in one run, reading from Input. txt and writing to Output.txt while printing to console. 
 
 **Code**
 
@@ -567,10 +607,32 @@ Infinite Solutions!
 ### LU Decomposition Method
 
 **Theory**
+- LU decomposition breaks down matrix A into two triangular matrices: L (lower) and U (upper), where A = LU and L has unit diagonal elements.
 
-```bash
-cat "LU Decomposition/LU Decomposition. txt"
-```
+- Computational complexity: decomposition requires O(n^3) operations; solving triangular systems takes O(n^2) steps.
+
+- Singular matrix detection: when any diagonal element of U equals zero, the determinant is zero.
+
+### Algorithm steps:
+
+1. **Apply Doolittle factorization**: construct L with ones on diagonal and U with computed pivot values from matrix A.
+
+2. **Forward pass**: solve Ly = b using forward substitution to find intermediate vector y.
+
+3. **Singularity check**: examine diagonal entries of U; if |U[i][i]| falls below epsilon threshold, mark as singular.
+
+4. **Classify singular cases**:  zero pivot with non-zero corresponding y-value indicates inconsistency; zero pivot with zero y-value suggests dependent equations.
+
+5. **Backward pass**: when matrix is non-singular, apply back substitution to solve Ux = y and output the solution; display L and U matrices in all cases.
+
+### What it does:
+
+- Decomposes coefficient matrix into lower and upper triangular factors using Doolittle's algorithm for solving linear equations.
+
+- Processes multiple systems from Input.txt file, generates solutions in Output.txt, and displays results on screen.
+
+- Outputs both L and U decomposition matrices; determines system status:  single solution, inconsistent system, or dependent system with multiple solutions.
+
 
 **Code**
 
@@ -816,10 +878,33 @@ Matrix A is singular (det A = 0)
 ### Matrix Inversion Method
 
 **Theory**
+- Matrix inversion uses the formula A^-1 = (1/det(A)) * adj(A), where adj(A) is the adjoint (transpose of cofactor matrix).
 
-```bash
-cat "Matrix Inversion/Matrix Inversion.txt"
-```
+- For each element, compute the cofactor C_ij = (-1)^(i+j) * M_ij, where M_ij is the minor (determinant of submatrix).
+
+- Computational cost is O(n^4) for cofactor expansion; more efficient than Gauss-Jordan for small matrices but impractical for large ones.
+
+### Algorithm steps:
+
+1. **Calculate determinant of A** using cofactor expansion or recursive method.
+
+2. **Check if det(A) ≠ 0**:  if determinant is zero or |det(A)| < EPS, matrix is singular; report failure.
+
+3. **Compute cofactor matrix**:  for each element A[i][j], calculate cofactor C[i][j] = (-1)^(i+j) * det(M[i][j]).
+
+4. **Find adjoint matrix**: transpose the cofactor matrix to get adj(A) = C^T.
+
+5. **Compute inverse**:  calculate A^-1 = (1/det(A)) * adj(A) and solve x = A^-1 * b.
+
+### What it does:
+
+- Solves linear systems AX = b by computing A^-1 using determinant and adjoint matrix method.
+
+- Handles multiple test cases, reading from Input.txt (matrix A and vector b per test case), writing to Output.txt, and printing to console.
+
+- Reports the inverse matrix A^-1 and the solution vector x = A^-1 * b. 
+
+- Detects singular matrices (det = 0) and reports failure.
 
 **Code**
 
@@ -1071,27 +1156,148 @@ Matrix is singular (det(A) = 0)
 ### Runge-Kutta 4th Order Method
 
 **Theory**
+This application numerically approximates solutions to ordinary differential equations utilizing the fourth-order Runge-Kutta technique. Processes multiple scenarios with varying starting values. 
 
-```bash
-cat "Runge Kutta 4th Order/Runge Kutta 4th Order.txt"
+### FUNCTION USED: 
+
 ```
+dy/dx = f(x,y) = xy + y
+```
+
+### RUNGE-KUTTA 4TH ORDER FORMULA:
+
+```
+y(n+1) = y(n) + (h/6)[k1 + 2k2 + 2k3 + k4]
+```
+
+where: 
+
+```
+k1 = h*f(x(n), y(n))
+k2 = h*f(x(n) + h/2, y(n) + k1/2)
+k3 = h*f(x(n) + h/2, y(n) + k2/2)
+k4 = h*f(x(n) + h, y(n) + k3)
+```
+
+### FEATURES:
+
+- Batch processing capability for multiple test cases
+
+- Constant step increment:  h = 0.001
+
+- Dynamic iteration adjustment according to x interval
+
+- Fourth-order accuracy guaranteed
+
+- Controlled decimal precision in results
 
 **Code**
 
 ```bash
-cat "Runge Kutta 4th Order/RungeKutta. cpp"
+#include <bits/stdc++.h>
+using namespace std;
+
+double f(double x, double y) {
+    return x*y + y;
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    fout << "RUNGE KUTTA 4th ORDER METHOD\n\n";
+    fout << "Function: f(x, y) = x*y + y\n\n";
+
+    int T;
+    fin >> T;
+    fout << "Total Test Cases: " << T << "\n\n";
+
+    for(int tc = 1; tc <= T; tc++) {
+        double x0, y0, xn, h;
+        fin >> x0 >> y0 >> xn >> h;
+
+        int steps = (int)((xn - x0) / h);
+        double x = x0;
+        double y = y0;
+
+        fout << "----------------------------------\n";
+        fout << "TEST CASE #" << tc << "\n\n";
+        fout << fixed << setprecision(3);
+        fout << "Initial x0: " << x0 << ", y0: " << y0 << "\n";
+        fout << "Final x: " << xn << "\n";
+        fout << "Step size (h): " << h << "\n";
+        fout << "Number of steps: " << steps << "\n\n";
+
+        for(int i = 0; i < steps; i++) {
+            double k1 = h * f(x, y);
+            double k2 = h * f(x + h/2.0, y + k1/2.0);
+            double k3 = h * f(x + h/2.0, y + k2/2.0);
+            double k4 = h * f(x + h, y + k3);
+
+            y = y + (k1 + 2*k2 + 2*k3 + k4)/6.0;
+            x = x + h;
+        }
+
+        fout << "Result:\n";
+        fout << "y(" << xn << ") = " << fixed << setprecision(3) << y << "\n\n";
+    }
+
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "Runge Kutta 4th Order/input.txt"
+3
+0 1 1 0.001
+0 2 2 0.001
+1 1 3 0.001
 ```
 
 **Output**
 
 ```bash
-cat "Runge Kutta 4th Order/output.txt"
+RUNGE KUTTA 4th ORDER METHOD
+
+Function: f(x, y) = x*y + y
+
+Total Test Cases: 3
+
+----------------------------------
+TEST CASE #1
+
+Initial x0: 0.000, y0: 1.000
+Final x: 1.000
+Step size (h): 0.001
+Number of steps: 1000
+
+Result:
+y(1.000) = 4.482
+
+----------------------------------
+TEST CASE #2
+
+Initial x0: 0.000, y0: 2.000
+Final x: 2.000
+Step size (h): 0.001
+Number of steps: 2000
+
+Result:
+y(2.000) = 109.196
+
+----------------------------------
+TEST CASE #3
+
+Initial x0: 1.000, y0: 1.000
+Final x: 3.000
+Step size (h): 0.001
+Number of steps: 2000
+
+Result:
+y(3.000) = 403.429
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -1195,10 +1401,83 @@ cat "Newton Divided Difference Interpolation/output.txt"
 ### Differentiation by Forward Interpolation Method
 
 **Theory**
+Newton's Forward Interpolation serves as a computational approach for approximating function values along with their derivatives through a collection of discrete coordinate points. When a function f(x)f(x)f(x) is evaluated at uniformly spaced coordinates x0,x1,... ,xn, the derivative values at point X,X,X can be estimated using Forward Difference Table.
 
-```bash
-cat "Differentiation by Forward Interpolation/Differentiation by Forward Interpolation.txt"
+**• First Derivative f'(x)**
+
 ```
+Δ1yi = yi+1-yi
+Δ2yi = Δ1yi+1-Δ1yi
+Δ3yi = Δ2yi+1-Δ2yi
+```
+
+### Where
+
+```
+yi = f(xi)
+```
+
+### Derivative Formulas: 
+
+```
+f'(X) ≈ (y0 + (2u-1)Δ2y0/2!  + (3u2-6u+2)Δ3y0/3!  +--)/h
+```
+
+**• Second Derivative**
+
+```
+f''(X) ≈ (Δ2y0+(u -1)Δ3y0--) /h^2
+```
+
+### Where: 
+
+```
+u=(X-x0)/h
+h=x(i+1)-xi
+```
+
+### Error Calculation: 
+
+Numerical derivatives are validated against exact analytical derivatives f'(X) and f''(X):
+
+```
+Error = |Analytical-Numerical|/Analytical×100
+```
+
+## Algorithm / Steps
+
+1. Extract total number of test scenarios T.
+
+2. Process each test scenario:
+
+• Extract n,a,b,X from input source.
+
+• Determine step increment h = (b -a)/n
+
+• Create uniformly distributed coordinates xi = a + i ∗ h and evaluate yi = f(xi).
+
+• Build forward difference table structure.
+
+• Evaluate first derivative f'(X)) applying Newton's approach.
+
+• Evaluate second derivative f''(X) applying Newton's approach.
+
+• Validate against exact derivatives to determine percentage deviation.
+
+Display inputs, difference table, computed derivatives, and error metrics to terminal and output document.
+
+### Features
+
+• Handles multiple test scenarios
+
+• Computes first and second derivatives through numerical methods
+
+• Constructs complete forward difference table
+
+• Determines percentage deviation from analytical derivatives
+
+• Writes results to terminal and file simultaneously
+
 
 **Code**
 
@@ -1360,9 +1639,22 @@ Percentage error: 0.000000 %
 
 **Theory**
 
-```bash
-cat "Differentiation by Backward Interpolation/Differentiation by Backward Interpolation. txt"
+This approach employs Newton's backward difference technique to evaluate derivatives at positions close to the final entries of a dataset. It generates backward differences and utilizes Newton's backward differentiation expressions.
+
+### BACKWARD DIFFERENCE DERIVATIVE FORMULAS: 
+
 ```
+f'(xₙ) = [∇f(xₙ) + (2s+1)∇²f(xₙ)/2!  + (3s²+6s+2)∇³f(xₙ)/6 +... ] / h
+```
+
+### where
+
+```
+s = (X - xₙ)/h
+```
+
+Applied for polynomial derivative computation using backward differences.
+
 
 **Code**
 
