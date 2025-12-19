@@ -1,65 +1,43 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 int degree;
 double coeff[20];
 
-// Polynomial function
-double f(double x)
-{
-    double result = 0;
-    for (int i = 0; i <= degree; i++)
-    {
-        result += coeff[i] * pow(x, degree - i);
-    }
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
     return result;
 }
 
-int main()
-{
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
     int t;
-    cin >> t;
-
-    while (t--)
-    {
-        double a, b, h, sum;
+    fin>>t;
+    while(t--){
+        double a,b,h,sum;
         int n;
-
-        // Input polynomial
-        cin >> degree;
-        for (int i = 0; i <= degree; i++)
-        {
-            cin >> coeff[i];
-        }
-
-        // Input limits and subintervals
-        cin >> a >> b;
-        cin >> n;
-
-        // Simpson's 1/3 rule requires even n
-        if (n % 2 != 0)
-        {
-            cout << "Invalid n (must be even)" << endl;
+        fin>>degree;
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        fin>>a>>b>>n;
+        if(n%2!=0){
+            fout<<"Invalid n (must be even)\n";
             continue;
         }
-
-        h = (b - a) / n;
-        sum = f(a) + f(b);
-
-        for (int i = 1; i < n; i++)
-        {
-            double x = a + i * h;
-            if (i % 2 == 0)
-                sum += 2 * f(x);
-            else
-                sum += 4 * f(x);
+        h=(b-a)/n;
+        sum=f(a)+f(b);
+        for(int i=1;i<n;i++){
+            double x=a+i*h;
+            if(i%2==0) sum+=2*f(x);
+            else sum+=4*f(x);
         }
-
-        double result = (h / 3) * sum;
-
-        cout << "Integral: " << result << endl;
+        double result=(h/3)*sum;
+        fout<<fixed<<setprecision(6);
+        fout<<"Integral: "<<result<<'\n';
     }
-
+    fin.close();
+    fout.close();
     return 0;
 }
