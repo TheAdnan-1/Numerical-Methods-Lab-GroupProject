@@ -1342,7 +1342,7 @@ estimated accurately
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 #define arr vector<double>
@@ -1471,7 +1471,7 @@ tabulated data is required
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 #define arr vector<double>
@@ -1604,7 +1604,7 @@ engineering computations, and scientific modeling where data points are irregula
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 #define arr vector<double>
