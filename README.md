@@ -1309,26 +1309,129 @@ y(3.000) = 403.429
 
 **Theory**
 
-```bash
-cat "Newton Forward Interpolation/Newton Forward Interpolation.txt"
-```
+#### Newton’s Forward Interpolation Method
+Newton’s Forward Interpolation Method is a numerical technique used to estimate the value of a
+function at a given point when the values of the function are known at equally spaced points. This
+method is particularly suitable when the interpolation point lies near the beginning of the data set.
+#### Basic Concept
+Assume that the values of a function f(x) are known at n equally spaced points x0, x1, x2, ..., xn.
+The spacing between consecutive x-values is constant and is denoted by h. Using these values, a
+polynomial is constructed that passes through all the given points. This polynomial is then used to
+estimate intermediate values of the function.
+#### Forward Differences
+Forward differences are used to build the interpolation polynomial. The first forward difference is
+defined as:
+∆y(i) = y(i+1) − y(i)
+Higher-order forward differences are defined recursively as:
+∆²y(i) = ∆y(i+1) − ∆y(i)
+#### Newton’s Forward Interpolation Formula
+The Newton forward interpolation polynomial is given by:
+f(x) = y0 + u∆y0 + [u(u − 1) / 2!]∆²y0 + [u(u − 1)(u − 2) / 3!]∆³y0 + ...
+where the parameter u is defined as:
+u = (x − x0) / h
+#### Advantages
+- Simple and systematic method
+- Efficient for equally spaced data
+- Easy to implement in computer
+programs
+#### Applications
+Newton’s Forward Interpolation Method is widely used in engineering, scientific computations,
+numerical analysis, and data approximation problems where intermediate values need to be
+estimated accurately
+
 
 **Code**
 
 ```bash
-cat "Newton Forward Interpolation/NewtonForward.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+#define arr vector<double>
+double fun(const arr& coeff, double x) {
+    double result = 0;
+    int n = coeff.size(),i;
+    for (i=0; i < n; i++) result += coeff[i] * pow(x, n - i - 1);
+    return result;
+}
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t,cnt=1;
+    fin>>t;
+    while(t--){
+    int degree,i,n,j;
+    fin >> degree;
+    arr coeff(degree + 1);
+    for (i = 0; i <= degree; i++) fin >> coeff[i];
+    fin >> n;
+    arr x(n), y(n);
+    for (i = 0; i < n; i++) {
+        fin >> x[i];
+        y[i] = fun(coeff, x[i]);
+    }
+    double value;
+    fin >> value;
+    vector<arr> diff(n, arr(n));
+    for (i = 0; i < n; i++) diff[i][0] = y[i];
+    for (j = 1; j < n; j++) {
+        for (i = 0; i < n - j; i++) diff[i][j] = diff[i + 1][j - 1] - diff[i][j - 1];
+    }
+    double h = x[1] - x[0];
+    double u = (value - x[0]) / h;
+    double result = diff[0][0];
+    double u2 = 1;
+    double fact = 1;
+    for ( i = 1; i < n; i++) {
+        u2 *= (u - (i - 1));
+        fact *= i;
+        result += (u2 * diff[0][i]) / fact;
+    }
+    fout<<"Test Case: "<<cnt<<'\n';
+    fout<<"Number of Data Points: "<<n<<'\n';
+    fout<<"Data Points: (x,y):\n";
+    for(i=0;i<n;i++) fout<<'('<<x[i]<<','<<y[i]<<")\n";
+    fout<<"Forward Difference Table:\n";
+    for(i=0;i<n;i++){
+        fout<<"y["<<i+1<<"] = ";
+        for(auto  &pk:diff[i]) fout<<pk<<' ';
+        fout<<'\n';
+    }
+    fout << "Interpolated value at x = " << value << " is " << result << endl;
+    cnt++;
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "Newton Forward Interpolation/input.txt"
+1
+3
+1 -6 11 -6
+4
+0 1 2 3
+1.5
 ```
 
 **Output**
 
 ```bash
-cat "Newton Forward Interpolation/output.txt"
+Test Case: 1
+Number of Data Points: 4
+Data Points: (x,y):
+(0,-6)
+(1,0)
+(2,0)
+(3,0)
+Forward Difference Table:
+y[1] = -6 6 -6 6 
+y[2] = 0 0 0 0 
+y[3] = 0 0 0 0 
+y[4] = 0 0 0 0 
+Interpolated value at x = 1.5 is 0.375
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
