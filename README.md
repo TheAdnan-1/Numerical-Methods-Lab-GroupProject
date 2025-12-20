@@ -2380,26 +2380,143 @@ a3 = 0.870
 
 **Theory**
 
-```bash
-cat "Transcendental Regression/Transcendental Regression.txt"
-```
+Transcendental regression is used when the relationship between variables involves exponential or
+power functions rather than simple polynomials. Such models frequently arise in physical,
+biological, and engineering systems.
+One common transcendental model is y = ae^(bx), which represents exponential growth or decay.
+This model is transformed into a linear form by taking the natural logarithm of both sides.
+Another important model is y = ax^b, known as the power model. This model is also linearized
+using logarithmic transformation, allowing the coefficients to be estimated using least squares.
+A third transcendental model is y = a + be^(x/z), where z is a known constant provided by the user.
+In this case, e^(x/z) is treated as an independent variable.
+After suitable transformation or substitution, the method of least squares is applied to estimate the
+unknown parameters of the model.
+Transcendental regression provides an effective way to fit complex nonlinear relationships using
+linear regression techniques.
 
 **Code**
 
-```bash
-cat "Transcendental Regression/TranscendentalRegression.cpp"
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+#define arr vector<double>
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t,cnt=1;
+    fin>>t;
+    while(t--){
+    fout<<"Test Case: "<<cnt<<'\n';
+    cnt++;
+    int model,n,i;
+    fin>>model>>n;
+    arr x(n),y(n);
+    for(i=0;i<n;i++)fin>>x[i]>>y[i];
+    fout<<fixed<<setprecision(3);
+    if(model==1){
+        // y=ae^(bx)
+        arr Y(n);
+        for(i=0;i<n;i++) Y[i] = log(y[i]);
+        double sx=0, sy=0, sxx=0, sxy=0,b,a;
+        for(i=0;i<n;i++){
+            sx += x[i];
+            sy += Y[i];
+            sxx += (x[i]*x[i]);
+            sxy += (x[i]*Y[i]);
+        }
+        b=(n*sxy-sx*sy)/(n*sxx-sx*sx);
+        a=exp((sy-b*sx)/n);
+        fout<<"Model: y=ae^(bx)\n";
+        fout<<"a = "<<a<<'\n';
+        fout<<"b = "<<b<<'\n';
+        fout<<"Equation: y = "<<a<<" e^("<<b<<" x)\n";
+    }
+    else if(model==2){
+        // y=ax^b
+        arr X(n),Y(n);
+        for(i=0;i<n;i++){
+            X[i]=log(x[i]);
+            Y[i]=log(y[i]);
+        }
+        double sx=0, sy=0, sxx=0, sxy=0,b,a;
+        for(i=0;i<n;i++){
+            sx += X[i];
+            sy += Y[i];
+            sxx += X[i]*X[i];
+            sxy += X[i]*Y[i];
+        }
+        b=(n*sxy-sx*sy)/(n*sxx-sx*sx);
+        a=exp((sy-b*sx)/n);
+        fout<<"Model: y=ax^b\n";
+        fout<<"a = "<<a<<'\n';
+        fout<<"b = "<<b<<'\n';
+        fout<<"Equation: y = "<<a<<" x^"<<b<<'\n';
+    }
+    else if(model == 3){
+        // y = a + b e^(x/z)
+        double z;
+        fin>>z;
+        arr X(n);
+        for(i=0;i<n;i++) X[i]=exp(x[i]/z);
+        double sx=0, sy=0, sxx=0, sxy=0,a,b;
+        for(i=0;i<n;i++){
+            sx += X[i];
+            sy += y[i];
+            sxx += X[i]*X[i];
+            sxy += X[i]*y[i];
+        }
+        b=(n*sxy-sx*sy)/(n*sxx-sx*sx);
+        a=(sy-b*sx)/n;
+        fout<<"Model: y = a + b e^(x/z)\n";
+        fout<<"a = "<<a<<'\n';
+        fout<<"b = "<<b<<'\n';
+        fout<<"Equation: y = "<<a<<" + "<<b<<" e^(x/"<<z<<")\n";
+    }
+    else fout<<"Invalid Option\n";
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 **Input**
 
 ```bash
-cat "Transcendental Regression/input.txt"
+3
+1 5
+1 2 3 4 5
+2.7 7.4 20.1 54.6 148.4
+2 4
+2 3 4 5
+8 27 64 125
+3 6
+0 4 8 12 16 20
+6.0 13.4 29.6 65.1 143.5 316.0
+4
+
 ```
 
 **Output**
 
 ```bash
-cat "Transcendental Regression/output.txt"
+Test Case: 1
+Model: y=ae^(bx)
+a = 3.311
+b = 0.072
+Equation: y = 3.311 e^(0.072 x)
+Test Case: 2
+Model: y=ax^b
+a = 1.522
+b = 1.100
+Equation: y = 1.522 x^1.100
+Test Case: 3
+Model: y = a + b e^(x/z)
+a = 22.900
+b = 0.000
+Equation: y = 22.900 + 0.000 e^(x/4.000)
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
