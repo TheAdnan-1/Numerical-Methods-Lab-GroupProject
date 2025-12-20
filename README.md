@@ -2265,9 +2265,9 @@ methods such as Gaussian elimination.
 Polynomial regression is useful in cases where experimental data exhibits curvature and cannot be
 accurately modeled using a straight line.
 Extends linear regression to fit polynomial curves of degree m:
-y = a₀ + a₁x + a₂x² + ... + aₘxᵐ
+- y = a₀ + a₁x + a₂x² + ... + aₘxᵐ
 The coefficients are found by solving the normal equations: 
-∑xy = a₀∑x + a₁∑x² + a₂∑x³ + ... + aₘ∑xᵐ⁺¹ ... ∑xᵐy = a₀∑xᵐ + a₁∑xᵐ⁺¹ + ... + aₘ∑x²ᵐ
+- ∑xy = a₀∑x + a₁∑x² + a₂∑x³ + ... + aₘ∑xᵐ⁺¹ ... ∑xᵐy = a₀∑xᵐ + a₁∑xᵐ⁺¹ + ... + aₘ∑x²ᵐ
 
 **Code**
 
