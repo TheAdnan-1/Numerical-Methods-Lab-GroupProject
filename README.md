@@ -1442,26 +1442,132 @@ Interpolated value at x = 1.5 is 0.375
 
 **Theory**
 
-```bash
-cat "Newton Backward Interpolation/Newton Backward Interpolation.txt"
-```
+#### Newton’s Backward Interpolation Method
+Newton’s Backward Interpolation Method is a numerical technique used to estimate the value of a
+function when the known data points are equally spaced and the interpolation point lies near the
+end of the data set. It is particularly useful when forward interpolation becomes less accurate.
+#### Basic Concept
+Let the values of a function f(x) be known at equally spaced points x0, x1, x2, ..., xn with a constant
+spacing h. Newton’s backward interpolation constructs a polynomial using backward differences,
+which are calculated from the end of the data table.
+#### Backward Differences
+Backward differences are defined as follows:
+∇y(i) = y(i) − y(i−1)
+Higher-order backward differences are defined recursively as:
+∇²y(i) = ∇y(i) − ∇y(i−1)
+#### Newton’s Backward Interpolation Formula
+The Newton backward interpolation polynomial is given by:
+f(x) = y(n) + u∇y(n) + [u(u + 1) / 2!]∇²y(n) + [u(u + 1)(u + 2) / 3!]∇³y(n) + ...
+where the parameter u is defined as:
+u = (x − x(n)) / h
+#### Advantages
+- Suitable when interpolation point is near the end of the data set
+- Accurate for equally spaced data
+- Easy to implement computationally
+#### Applications
+Newton’s Backward Interpolation Method is widely used in numerical analysis, engineering
+problems, scientific computations, and data approximation tasks where estimation near the end of
+tabulated data is required
 
 **Code**
 
 ```bash
-cat "Newton Backward Interpolation/NewtonBackward.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+#define arr vector<double>
+double fun(const arr& coeff, double x) {
+    double result = 0;
+    int n = coeff.size(),i;
+    for (i = 0; i < n; i++) {
+        result += coeff[i] * pow(x, n - i - 1);
+    }
+    return result;
+}
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t,cnt=1;
+    fin>>t;
+    while(t--){
+    int degree,n,i,j;
+    fin >> degree;
+    arr coeff(degree + 1);
+    for (i = 0; i <= degree; i++) fin >> coeff[i];
+    fin >> n;
+    arr x(n), y(n);
+    for (i = 0; i < n; i++) {
+        fin >> x[i];
+        y[i] = fun(coeff, x[i]);
+    }
+    double value;
+    fin >> value;
+    vector<arr> diff(n, arr(n));
+    for ( i = 0; i < n; i++) diff[i][0] = y[i];
+    for ( j = 1; j < n; j++) {
+        for (i = n - 1; i >= j; i--) {
+            diff[i][j] = diff[i][j - 1] - diff[i - 1][j - 1];
+        }
+    }
+    double h = x[1] - x[0];
+    double u = (value - x[n - 1]) / h;
+    double result = diff[n - 1][0];
+    double u_term = 1;
+    double fact = 1;
+    for ( i = 1; i < n; i++) {
+        u_term *= (u + (i - 1));
+        fact *= i;
+        result += (u_term * diff[n - 1][i]) / fact;
+    }
+    fout<<"Test Case: "<<cnt<<'\n';
+    fout<<"Number of Data Points: "<<n<<'\n';
+    fout<<"Data Points: (x,y):\n";
+    for(i=0;i<n;i++) fout<<'('<<x[i]<<','<<y[i]<<")\n";
+    fout<<"Backward Difference Table:\n";
+    for(i=0;i<n;i++){
+        fout<<"y["<<i+1<<"] = ";
+        for(auto  &pk:diff[i]) fout<<pk<<' ';
+        fout<<'\n';
+    }
+    fout << "Interpolated value at x = " << value << " is " << result << endl;
+    cnt++;
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 **Input**
 
 ```bash
-cat "Newton Backward Interpolation/input.txt"
+1
+3
+1 -6 11 -6
+4
+0 1 2 3
+2.5
+
 ```
 
 **Output**
 
 ```bash
-cat "Newton Backward Interpolation/output.txt"
+Test Case: 1
+Number of Data Points: 4
+Data Points: (x,y):
+(0,-6)
+(1,0)
+(2,0)
+(3,0)
+Backward Difference Table:
+y[1] = -6 0 0 0 
+y[2] = 0 6 0 0 
+y[3] = 0 0 -6 0 
+y[4] = 0 0 0 6 
+Interpolated value at x = 2.5 is -0.375
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
