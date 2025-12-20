@@ -91,27 +91,73 @@ Each method folder contains:
 ### Bisection Method
 
 **Theory**
+- The Bisection Method is a numerical technique used to find a real root of a nonlinear equation f(x) = 0.
+- It requires an initial interval [a, b] such that the function is continuous and f(a)·f(b) < 0, ensuring the existence of a root.
+- The interval is repeatedly divided into two equal halves by computing the midpoint c = (a + b) / 2.
+- The sign of f(c) determines the new interval: if f(a)·f(c) < 0, the root lies in [a, c]; otherwise, it lies in [c, b].
+- This process continues until the interval length becomes sufficiently small or the function value at the midpoint is close to zero.
+- The method always converges for a valid initial interval but has linear (slow) convergence.
+- The maximum error after n iterations is (b − a) / 2ⁿ.
 
-```bash
-cat Bisection/Bisection.txt
-```
 
 **Code**
-
 ```cpp
-cat Bisection/Bisection.cpp
-```
+#include <bits/stdc++.h>
+using namespace std;
 
+int degree;
+double coeff[20];
+
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
+    return result;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    double a,b,mid;
+    int n;
+    fin>>degree;
+    for(int i=0;i<=degree;i++) fin>>coeff[i];
+    fin>>a>>b>>n;
+    if(f(a)*f(b)>=0){
+        fout<<"Invalid interval\n";
+        return 0;
+    }
+    for(int i=0;i<n;i++){
+        mid=(a+b)/2;
+        if(f(mid)==0) break;
+        else if(f(a)*f(mid)<0) b=mid;
+        else a=mid;
+    }
+    fout<<fixed<<setprecision(6)<<mid<<'\n';
+
+    fin.close();
+    fout.close();
+    return 0;
+}
+```
 **Input**
 
 ```bash
-cat Bisection/input.txt
+3
+2
+1 0 -4
+3
+1 0 -1 -2
+2
+1 -3 2
 ```
 
 **Output**
 
 ```bash
-cat Bisection/output.txt
+2
+1.52197
+1
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -122,26 +168,133 @@ cat Bisection/output.txt
 
 **Theory**
 
-```bash
-cat "False Position/False Position.txt"
-```
+-The False Position method is a numerical technique used to find a real root of a nonlinear equation f(x) = 0.
+-It requires an initial interval [a, b] where the function is continuous and f(a)·f(b) < 0.
+-The root is approximated by a straight-line interpolation between the points (a, f(a)) and (b, f(b)).
+-The interval is updated by replacing the endpoint having the same sign as f(c), and the process is repeated until convergence.
 
 **Code**
 
 ```cpp
-cat "False Position/FalsePosition.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+
+double f(double x,double c[],int deg){
+    double res=0;
+    for(int i=0;i<=deg;i++) res+=c[i]*pow(x,deg-i);
+    return res;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int T;
+    fin>>T;
+    fout<<"Total Test Cases: "<<T<<"\n\n";
+
+    for(int t=1;t<=T;t++){
+        int deg;
+        fin>>deg;
+        double coef[20];
+        for(int i=0;i<=deg;i++) fin>>coef[i];
+
+        double a=-10,b=10,tol=0.001;
+        int n=50;
+        double fa=f(a,coef,deg),fb=f(b,coef,deg);
+
+        fout<<"Function: f(x) = ";
+        for(int i=0;i<=deg;i++){
+            if(i>0 && coef[i]>=0) fout<<"+";
+            fout<<coef[i];
+            if(deg-i>0) fout<<"x^"<<(deg-i)<<" ";
+        }
+        fout<<"\n";
+        fout<<"Degree: "<<deg<<"\n";
+        fout<<fixed<<setprecision(6);
+        fout<<"Error Tolerance: "<<tol<<"\n";
+        fout<<"Search Interval: ["<<a<<", "<<b<<"]\n";
+        fout<<"Root Approximation:\n";
+
+        if(fa*fb>0){
+            fout<<"  Invalid interval (no sign change)\n";
+        }else{
+            double c;
+            for(int i=0;i<n;i++){
+                c=(a*fb-b*fa)/(fb-fa);
+                double fc=f(c,coef,deg);
+                fout<<"  Iter "<<i+1<<": x = "<<c<<"\n";
+                if(fabs(fc)<tol) break;
+                if(fa*fc<0){
+                    b=c;
+                    fb=fc;
+                }else{
+                    a=c;
+                    fa=fc;
+                }
+            }
+            fout<<"  Final root ≈ "<<c<<"\n";
+        }
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "False Position/input.txt"
+3
+4
+4 -9 0 0 4
+3
+1 -6 11 -6
+2
+1 0 -4
 ```
 
 **Output**
 
 ```bash
-cat "False Position/output.txt"
+Total Test Cases: 3
+
+Function: f(x) = 4x^4 -9x^3 +0x^2 +0x^1 +4
+Degree: 4
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 0.444444
+  Iter 2: x = 0.694444
+  Iter 3: x = 0.826087
+  Iter 4: x = 0.887097
+  Iter 5: x = 0.915254
+  ...
+  Final root ≈ 0.906250
+
+Function: f(x) = 1x^3 -6x^2 +11x^1 -6
+Degree: 3
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 1.000000
+  Iter 2: x = 2.000000
+  Iter 3: x = 3.000000
+  ...
+  Final root ≈ 0.999554
+
+Function: f(x) = 1x^2 +0x^1 -4
+Degree: 2
+Error Tolerance: 0.001000
+Search Interval: [-10.000000, 10.000000]
+Root Approximation:
+  Iter 1: x = 0.400000
+  Iter 2: x = 1.333333
+  Iter 3: x = 1.600000
+  Iter 4: x = 1.777778
+  Iter 5: x = 1.846154
+  ...
+  Final root ≈ 2.000186
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -152,26 +305,111 @@ cat "False Position/output.txt"
 
 **Theory**
 
-```bash
-cat "Newton Raphson/Newton Raphson.txt"
-```
+-The Newton–Raphson method is a numerical technique used to find a root of a nonlinear equation f(x) = 0.
+-It starts with an initial approximation and uses the derivative of the function to improve accuracy.
+-The iterative formula is xₙ₊₁ = xₙ − f(xₙ) / f′(xₙ).
+-The method converges rapidly (quadratic convergence) when the initial guess is close to the root.
 
 **Code**
 
 ```cpp
-cat "Newton Raphson/NewtonRaphson. cpp"
+#include <bits/stdc++.h>
+using namespace std;
+
+double f(const vector<double>& coeffs,double x){
+    double res=0,xn=1;
+    for(double c:coeffs){
+        res+=c*xn;
+        xn*=x;
+    }
+    return res;
+}
+
+double df(const vector<double>& coeffs,double x){
+    double res=0,xn=1;
+    for(int i=1;i<coeffs.size();i++){
+        res+=i*coeffs[i]*xn;
+        xn*=x;
+    }
+    return res;
+}
+
+double newtonRaphson(const vector<double>& coeffs,double x0,double tol=1e-6,int maxIter=1000){
+    for(int i=0;i<maxIter;i++){
+        double dfx=df(coeffs,x0);
+        if(fabs(dfx)<1e-12) break;
+        double x1=x0-f(coeffs,x0)/dfx;
+        if(fabs(x1-x0)<tol) return x1;
+        x0=x1;
+    }
+    return x0;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+    fout<<fixed<<setprecision(6);
+
+    while(t--){
+        int degree;
+        fin>>degree;
+        vector<double> coeffs(degree+1);
+        for(int i=0;i<=degree;i++) fin>>coeffs[i];
+        double xmin,xmax;
+        fin>>xmin>>xmax;
+
+        double step=0.5;
+        vector<double> roots;
+
+        for(double x=xmin;x<xmax;x+=step){
+            if(f(coeffs,x)*f(coeffs,x+step)<=0){
+                double root=newtonRaphson(coeffs,x);
+                if(none_of(roots.begin(),roots.end(),
+                    [&](double r){return fabs(r-root)<1e-4;})){
+                    roots.push_back(root);
+                }
+            }
+        }
+
+        if(roots.empty()){
+            fout<<"No real roots found\n";
+        }else{
+            for(double r:roots) fout<<"Root: "<<r<<"\n";
+        }
+        fout<<"----\n";
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "Newton Raphson/input.txt"
+2
+3
+-6 11 -6 1
+0 4
+2
+-4 0 1
+-3 3
+
 ```
 
 **Output**
 
 ```bash
-cat "Newton Raphson/output.txt"
+Root: 1.000000
+Root: 2.000000
+Root: 3.000000
+----
+Root: -2.000000
+Root: 2.000000
+----
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -182,26 +420,82 @@ cat "Newton Raphson/output.txt"
 
 **Theory**
 
-```bash
-cat Secant/Secant.txt
-```
+-The Secant method is a numerical technique used to find a root of a nonlinear equation f(x) = 0.
+-It starts with two initial approximations and does not require the derivative of the function.
+-The iterative formula uses a secant line through the points (xₙ₋₁, f(xₙ₋₁)) and (xₙ, f(xₙ)).
+-The method converges faster than the bisection method but slower than Newton–Raphson.
 
 **Code**
 
 ```cpp
-cat Secant/Secant.cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int degree;
+double coeff[20];
+
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
+    return result;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+    while(t--){
+        double x0,x1,x2,tol;
+        int maxIter,iter=0;
+        fin>>degree;
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        fin>>x0>>x1>>tol>>maxIter;
+
+        bool found=false;
+        while(iter<maxIter){
+            if(f(x1)-f(x0)==0) break;
+            x2=x1-(f(x1)*(x1-x0))/(f(x1)-f(x0));
+            if(fabs(x2-x1)<tol){
+                fout<<fixed<<setprecision(6);
+                fout<<"Root: "<<x2<<'\n';
+                found=true;
+                break;
+            }
+            x0=x1;
+            x1=x2;
+            iter++;
+        }
+        if(!found) fout<<"Not Converged\n";
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat Secant/input.txt
+2
+3
+1 0 -1 -2
+1 2
+0.0001
+100
+2
+1 -3 2
+0 3
+0.0001
+100
 ```
 
 **Output**
 
 ```bash
-cat Secant/output.txt
+Root: 1.52138
+Root: 1
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -2529,26 +2823,78 @@ Equation: y = 22.900 + 0.000 e^(x/4.000)
 
 **Theory**
 
-```bash
-cat "Simpson 1_3/Simpson 1_3.txt"
-```
+-Simpson’s 1/3 rule is a numerical integration method used to approximate definite integrals.
+-The interval is divided into an even number of equal subintervals, and the integrand is approximated by parabolic arcs.
+-It uses function values at equally spaced points with weights 1, 4, and 2 alternately.
+-The method provides higher accuracy than the trapezoidal rule for smooth functions.
 
 **Code**
 
 ```cpp
-cat "Simpson 1_3/Simpson13.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+
+int degree;
+double coeff[20];
+
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
+    return result;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+    while(t--){
+        double a,b,h,sum;
+        int n;
+        fin>>degree;
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        fin>>a>>b>>n;
+        if(n%2!=0){
+            fout<<"Invalid n (must be even)\n";
+            continue;
+        }
+        h=(b-a)/n;
+        sum=f(a)+f(b);
+        for(int i=1;i<n;i++){
+            double x=a+i*h;
+            if(i%2==0) sum+=2*f(x);
+            else sum+=4*f(x);
+        }
+        double result=(h/3)*sum;
+        fout<<fixed<<setprecision(6);
+        fout<<"Integral: "<<result<<'\n';
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "Simpson 1_3/input.txt"
+2
+2
+1 0 0
+0 1
+10
+3
+1 0 -1 -2
+1 2
+10
 ```
 
 **Output**
 
 ```bash
-cat "Simpson 1_3/output.txt"
+Integral: 0.333333
+Integral: 2.25
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
@@ -2559,26 +2905,83 @@ cat "Simpson 1_3/output.txt"
 
 **Theory**
 
-```bash
-cat "Simpson 3_8/Simpson 3_8.txt"
-```
+-Simpson’s 3/8 rule is a numerical integration technique used to evaluate definite integrals.
+-The interval is divided into subintervals in multiples of three, and the function is approximated using cubic polynomials.
+-It uses function values with weights 1, 3, 3, and 1 over each group of three subintervals.
+-The method is slightly less accurate than Simpson’s 1/3 rule but useful when the number of subintervals is a multiple of three.
 
 **Code**
 
 ```cpp
-cat "Simpson 3_8/Simpson38.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+
+int degree;
+double coeff[20];
+
+double f(double x){
+    double result=0;
+    for(int i=0;i<=degree;i++) result+=coeff[i]*pow(x,degree-i);
+    return result;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+    while(t--){
+        double a,b,h,sum;
+        int n;
+        fin>>degree;
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        fin>>a>>b>>n;
+        if(n%3!=0){
+            fout<<"Invalid n (must be multiple of 3)\n";
+            continue;
+        }
+        h=(b-a)/n;
+        sum=f(a)+f(b);
+        for(int i=1;i<n;i++){
+            double x=a+i*h;
+            if(i%3==0) sum+=2*f(x);
+            else sum+=3*f(x);
+        }
+        double result=(3*h/8)*sum;
+        fout<<fixed<<setprecision(6);
+        fout<<"Integral: "<<result<<'\n';
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
 ```
 
 **Input**
 
 ```bash
-cat "Simpson 3_8/input.txt"
+3
+2
+1 0 0
+0 1
+6
+3
+1 0 -1 -2
+1 2
+12
+1
+1 1
+0 3
+9
 ```
 
 **Output**
 
 ```bash
-cat "Simpson 3_8/output.txt"
+Integral: 0.333333
+Integral: 2.25
+Integral: 7.5
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
