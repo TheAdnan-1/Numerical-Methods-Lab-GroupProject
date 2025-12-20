@@ -2129,21 +2129,79 @@ Percentage error: 0.000000 %
 ### Linear Regression Method
 
 **Theory**
+Linear regression is a numerical technique used to establish a linear relationship between two
+variables based on observed data. It is one of the simplest and most widely used curve fitting
+methods in numerical analysis.
+In linear regression, one variable is considered independent and is denoted by x, while the other
+variable is dependent and is denoted by y. The objective is to find a straight line that best
+represents the relationship between x and y.
+The mathematical model of linear regression is given by y = a + bx, where a is the intercept and b is
+the slope of the line. These constants are chosen such that the line fits the given data points as
+closely as possible.
+The method of least squares is used to determine the values of a and b. According to this method,
+the sum of the squares of the deviations between the observed values and the estimated values is
+minimized.
+By applying the least squares principle, a set of normal equations is obtained. Solving these
+equations yields the best-fit values of the regression coefficients a and b.
+Linear regression is commonly used in engineering and scientific applications to model trends,
+make predictions, and analyze experimental data.
+#### CONCEPT
 
-```bash
-cat "Linear Regression/Linear Regression.txt"
-```
+For n data points (xi, yi) the regression line: y = a + bx is determined by minimizing:
+∑(yi − (a + bxi))²
+
+This leads to two closed-form formulas:
+
+Slope (b):
+b = [ n∑xy − (∑x)(∑y) ] / [ n∑x² − (∑x)² ]
+
+Intercept (a):
+a = (∑y − b∑x) / n
+
+These values define the best-fit straight line.
+
+PROGRAM FEATURES
+
+• Reads all inputs from input.txt  
+• Writes results to both console and output.txt  
+• Handles multiple test cases  
+• Prints:
+  - Number of data points
+  - All x and y values
+  - Computed intercept (a)
+  - Computed slope (b)
+  - Final regression line equation
+
+ALGORITHM (Least Squares Method):
+
+• Read number of data points n  
+• Read arrays x[n] and y[n]  
+• Compute required sums:
+  - Σx
+  - Σy
+  - Σxy
+  - Σx²
+
+• Apply formulas:
+  - Compute b (slope)
+  - Compute a (intercept)
+
+• Display and store:
+  - Input values
+  - Calculated coefficients
+  - Final regression line
+
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 #define arr vector<double>
 int main() {
     ifstream fin("input.txt");
     ofstream fout("output.txt");
-    int t;
+    int t,cnt=1;
     fin>>t;
     while(t--){
     int n,i;
@@ -2160,27 +2218,49 @@ int main() {
     b=(n*sumxy-sumx*sumy)/(n*sumx2-sumx*sumx);
     a=(sumy-b*sumx)/n;
     fout<<fixed<<setprecision(3);
+    fout<<"Test Case: "<<cnt<<'\n';
+    fout<<"x - values: ";
+    for(i=0;i<n;i++) fout<<x[i]<<' ';
+    fout<<'\n';
+    fout<<"y - values: ";
+    for(i=0;i<n;i++) fout<<y[i]<<' ';
+    fout<<'\n';
     fout<<"Linear Regression Line:\n";
     fout<<"y = a + b x\n";
     fout<<"a = "<<a<<'\n';
     fout<<"b = "<<b<< '\n';
+    cnt++;
     }
     fin.close();
     fout.close();
     return 0;
 }
+
 ```
 
 **Input**
 
 ```bash
-cat "Linear Regression/input.txt"
+1
+5
+1 2
+2 4
+3 5
+4 4
+5 6
 ```
 
 **Output**
 
 ```bash
-cat "Linear Regression/output.txt"
+Test Case: 1
+x - values: 1.000 2.000 3.000 4.000 5.000 
+y - values: 2.000 4.000 5.000 4.000 6.000 
+Linear Regression Line:
+y = a + b x
+a = 1.800
+b = 0.800
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
