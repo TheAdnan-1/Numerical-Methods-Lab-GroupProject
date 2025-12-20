@@ -2160,18 +2160,6 @@ a = (∑y − b∑x) / n
 
 These values define the best-fit straight line.
 
-PROGRAM FEATURES
-
-• Reads all inputs from input.txt  
-• Writes results to both console and output.txt  
-• Handles multiple test cases  
-• Prints:
-  - Number of data points
-  - All x and y values
-  - Computed intercept (a)
-  - Computed slope (b)
-  - Final regression line equation
-
 ALGORITHM (Least Squares Method):
 
 • Read number of data points n  
@@ -2181,16 +2169,6 @@ ALGORITHM (Least Squares Method):
   - Σy
   - Σxy
   - Σx²
-
-• Apply formulas:
-  - Compute b (slope)
-  - Compute a (intercept)
-
-• Display and store:
-  - Input values
-  - Calculated coefficients
-  - Final regression line
-
 
 **Code**
 
@@ -2271,26 +2249,124 @@ b = 0.800
 
 **Theory**
 
-```bash
-cat "Polynomial Regression/Polynomial Regression.txt"
-```
+Polynomial regression is a curve fitting technique used when the relationship between the variables
+is nonlinear. It extends linear regression by fitting a polynomial of higher degree to the given data
+points.
+In polynomial regression, the dependent variable y is expressed as a polynomial function of the
+independent variable x. The general form of the polynomial regression model is y = a0 + a1x +
+a2x^2 + ... + amx^m.
+The degree of the polynomial m is chosen by the user based on the nature of the data. A higher
+degree polynomial can provide a closer fit but may also lead to overfitting.
+The coefficients of the polynomial are determined using the method of least squares. Normal
+equations are formed by minimizing the sum of squared errors between the observed and predicted
+values.
+These normal equations form a system of linear equations which can be solved using numerical
+methods such as Gaussian elimination.
+Polynomial regression is useful in cases where experimental data exhibits curvature and cannot be
+accurately modeled using a straight line.
+Extends linear regression to fit polynomial curves of degree m: y = a₀ + a₁x + a₂x² + ... + aₘxᵐ
+The coefficients are found by solving the normal equations: ∑xy = a₀∑x + a₁∑x² + a₂∑x³ + ... + aₘ∑xᵐ⁺¹ ... ∑xᵐy = a₀∑xᵐ + a₁∑xᵐ⁺¹ + ... + aₘ∑x²ᵐ
 
 **Code**
 
-```bash
-cat "Polynomial Regression/PolynomialRegression.cpp"
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+#define arr vector<double>
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t,cnt=1;
+    fin>>t;
+    while(t--){
+    int n, m,i,row,col,k,j;
+    double sum;
+    fin>>n>>m;
+    arr x(n), y(n);
+    for(i=0;i<n;i++) fin>>x[i]>>y[i];
+    vector<arr>A(m+1,arr(m+2));
+    for(row=0;row<m+1;row++){
+        for(col=0;col<m+1;col++){
+            sum=0;
+            for(i=0;i<n;i++) sum += pow(x[i],row+col);
+            A[row][col]=sum;
+        }
+        sum=0;
+        for(i=0;i<n;i++)
+            sum += y[i]*pow(x[i], row);
+        A[row][m+1] = sum;
+    }
+    for(i=0;i<m+1;i++){
+        for(k=i+1;k<m+1;k++){
+            double factor = A[k][i]/A[i][i];
+            for(j=i; j <= m+1; j++)
+                A[k][j] -= factor * A[i][j];
+        }
+    }
+    arr a(m+1);
+    for(i=m;i>=0;i--) {
+        a[i] = A[i][m+1];
+        for(j=i+1;j<m+1;j++) a[i] -= A[i][j] * a[j];
+        a[i] /= A[i][i];
+    }
+    fout<<fixed<<setprecision(3);
+    fout<<"Test Case: "<<cnt<<'\n';
+    fout<<"x - values: ";
+    for(i=0;i<n;i++) fout<<x[i]<<' ';
+    fout<<'\n';
+    fout<<"y - values: ";
+    for(i=0;i<n;i++) fout<<y[i]<<' ';
+    fout<<'\n';
+    fout<<"Polynomial Regression (degree "<<m<<"):\n";
+    for(i=0;i<=m;i++)fout<<'a'<<i<<" = "<<a[i]<<'\n';
+    cnt++;
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 **Input**
 
 ```bash
-cat "Polynomial Regression/input.txt"
+2
+5 2
+0 1
+1 6
+2 17
+3 34
+4 57
+6 3
+-2 -4
+-1 0
+0 2
+1 2
+2 8
+3 26
+
 ```
 
 **Output**
 
 ```bash
-cat "Polynomial Regression/output.txt"
+Test Case: 1
+x - values: 0.000 1.000 2.000 3.000 4.000 
+y - values: 1.000 6.000 17.000 34.000 57.000 
+Polynomial Regression (degree 2):
+a0 = 1.000
+a1 = 2.000
+a2 = 3.000
+Test Case: 2
+x - values: -2.000 -1.000 0.000 1.000 2.000 3.000 
+y - values: -4.000 0.000 2.000 2.000 8.000 26.000 
+Polynomial Regression (degree 3):
+a0 = 1.175
+a1 = -0.307
+a2 = 0.230
+a3 = 0.870
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
