@@ -98,7 +98,7 @@ cat Bisection/Bisection.txt
 
 **Code**
 
-```bash
+```cpp
 cat Bisection/Bisection.cpp
 ```
 
@@ -128,7 +128,7 @@ cat "False Position/False Position.txt"
 
 **Code**
 
-```bash
+```cpp
 cat "False Position/FalsePosition.cpp"
 ```
 
@@ -158,7 +158,7 @@ cat "Newton Raphson/Newton Raphson.txt"
 
 **Code**
 
-```bash
+```cpp
 cat "Newton Raphson/NewtonRaphson. cpp"
 ```
 
@@ -188,7 +188,7 @@ cat Secant/Secant.txt
 
 **Code**
 
-```bash
+```cpp
 cat Secant/Secant.cpp
 ```
 
@@ -2535,7 +2535,7 @@ cat "Simpson 1_3/Simpson 1_3.txt"
 
 **Code**
 
-```bash
+```cpp
 cat "Simpson 1_3/Simpson13.cpp"
 ```
 
@@ -2565,7 +2565,7 @@ cat "Simpson 3_8/Simpson 3_8.txt"
 
 **Code**
 
-```bash
+```cpp
 cat "Simpson 3_8/Simpson38.cpp"
 ```
 
