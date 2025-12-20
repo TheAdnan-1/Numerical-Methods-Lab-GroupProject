@@ -1578,26 +1578,123 @@ Interpolated value at x = 2.5 is -0.375
 
 **Theory**
 
-```bash
-cat "Newton Divided Difference Interpolation/Newton Divided Difference Interpolation.txt"
-```
+#### Newton’s Divided Difference Interpolation Method
+Newton’s Divided Difference Interpolation Method is a numerical technique used to construct an
+interpolation polynomial when the given data points are not necessarily equally spaced. This
+method generalizes Newton’s interpolation approach and is suitable for arbitrary data distributions.
+#### Basic Concept
+Suppose the values of a function f(x) are known at n distinct points x0, x1, x2, ..., xn. Newton’s
+divided difference method constructs a polynomial that passes through all these points using
+divided differences instead of finite differences.
+#### Divided Differences
+The first divided difference is defined as:
+f[xi, xi+1] = ( f(xi+1) − f(xi) ) / ( xi+1 − xi )
+Higher-order divided differences are defined recursively as:
+f[xi, xi+1, ..., xi+k] = ( f[xi+1, ..., xi+k] − f[xi, ..., xi+k−1] ) / ( xi+k − xi )
+#### Newton’s Divided Difference Formula
+The interpolation polynomial is given by:
+P(x) = f[x0] + (x − x0)f[x0, x1] + (x − x0)(x − x1)f[x0, x1, x2] + ...
+#### Advantages
+- Works for unequally spaced data
+- Easy to extend when new data points are added 
+- Computationally efficient
+#### Applications
+Newton’s Divided Difference Interpolation Method is widely used in numerical analysis, data fitting,
+engineering computations, and scientific modeling where data points are irregularly spaced
 
 **Code**
 
 ```bash
-cat "Newton Divided Difference Interpolation/NewtonDividedDifference.cpp"
+#include <bits/stdc++.h>
+using namespace std;
+#define arr vector<double>
+double fun(const arr& coeff, double x) {
+    double result = 0;
+    int n = coeff.size(),i;
+    for ( i = 0; i < n; i++) result += coeff[i] * pow(x, n - i - 1);
+    return result;
+}
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t,cnt=1;
+    fin>>t;
+    while(t--){
+    int degree,n,i,j;
+    fin >> degree;
+    arr coeff(degree + 1);
+    for ( i = 0; i <= degree; i++) fin >> coeff[i];
+    fin >> n;
+    arr x(n), y(n);
+    for ( i = 0; i < n; i++){
+        fin >> x[i];
+        y[i] = fun(coeff, x[i]);
+    }
+    double value;
+    fin >> value;
+    vector<arr> div(n, arr(n));
+    for (i = 0; i < n; i++) div[i][0] = y[i];
+    for (j = 1; j < n; j++) {
+        for (i = 0; i < n - j; i++) {
+            div[i][j] = (div[i + 1][j - 1] - div[i][j - 1]) /
+                        (x[i + j] - x[i]);
+        }
+    }
+    double result = div[0][0];
+    double term = 1.0;
+    for (i = 1; i < n; i++) {
+        term *= (value - x[i - 1]);
+        result += term * div[0][i];
+    }
+    fout<<"Test Case: "<<cnt<<'\n';
+    fout<<"Number of Data Points: "<<n<<'\n';
+    fout<<"Data Points: (x,y):\n";
+    for(i=0;i<n;i++) fout<<'('<<x[i]<<','<<y[i]<<")\n";
+    fout<<"Difference Table:\n";
+    for(i=0;i<n;i++){
+        fout<<"y["<<i+1<<"] = ";
+        for(auto  &pk:div[i]) fout<<pk<<' ';
+        fout<<'\n';
+    }
+    fout << "Interpolated value at x = " << value << " is " << result << endl;
+    cnt++;
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 **Input**
 
 ```bash
-cat "Newton Divided Difference Interpolation/input.txt"
+1
+3
+1 -6 11 -6
+4
+0 1.2 2.1 3.5
+2.5
+
 ```
 
 **Output**
 
 ```bash
-cat "Newton Divided Difference Interpolation/output.txt"
+Test Case: 1
+Number of Data Points: 4
+Data Points: (x,y):
+(0,-6)
+(1.2,0.288)
+(2.1,-0.099)
+(3.5,1.875)
+Difference Table:
+y[1] = -6 5.24 -2.7 1 
+y[2] = 0.288 -0.43 0.8 0 
+y[3] = -0.099 1.41 0 0 
+y[4] = 1.875 0 0 0 
+Interpolated value at x = 2.5 is -0.375
+
 ```
 
 [⬆ Back to top](#numerical-methods-laboratory-group-project)
