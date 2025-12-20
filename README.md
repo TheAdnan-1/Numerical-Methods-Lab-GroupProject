@@ -1,4 +1,4 @@
-# NUMERICAL METHODS LABORATORY GROUP PROJECT
+# Numerical Methods Laboratory Group Project
 
 A Numerical Methods group project built with C++.  
 
