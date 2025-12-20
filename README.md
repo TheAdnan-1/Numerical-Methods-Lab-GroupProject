@@ -237,7 +237,7 @@ cat Secant/output.txt
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -437,7 +437,7 @@ Infinite Solutions!
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 const double eps = 1e-9;
@@ -635,7 +635,7 @@ Infinite Solutions!
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 const double eps = 1e-9;
@@ -907,7 +907,7 @@ Matrix A is singular (det A = 0)
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 const double eps = 1e-9;
@@ -1192,7 +1192,7 @@ k4 = h*f(x(n) + h, y(n) + k3)
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -1786,7 +1786,7 @@ Display inputs, difference table, computed derivatives, and error metrics to ter
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -1963,7 +1963,7 @@ Applied for polynomial derivative computation using backward differences.
 
 **Code**
 
-```bash
+```cpp
 #include <bits/stdc++.h>
 using namespace std;
 
